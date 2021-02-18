@@ -61,13 +61,14 @@ func upload(uploadCount int, goroutineCount int) {
 							select {
 							case <-done:
 								break
-							case <-time.After(60 * time.Second):
+							case <-time.After(5 * 60 * time.Second):
 								fmt.Println("exit by timeout")
 								syscall.Exit(-1)
 							}
 						}
 					}()
-					uploadFileToQiniu(index, goroutineIndex)
+					response, err := uploadFileToQiniu()
+					fmt.Printf("goroutineIndex:%d, index:%d error:%v response:%v \n", goroutineIndex, index, err, response)
 					done<- true
 				}
 			}
@@ -77,13 +78,14 @@ func upload(uploadCount int, goroutineCount int) {
 	wait.Wait()
 }
 
-func uploadFileToQiniu(index int, goroutineIndex int) {
+func uploadFileToQiniu() (response storage.PutRet, err error) {
 
 	filePath := "/Users/senyang/Desktop/QiNiu/pycharm.dmg"
 	filePath = "/Users/senyang/Desktop/QiNiu/UploadResource_49M.zip"
 	filePath = "/Users/senyang/Desktop/QiNiu/Image/image.png"
+	filePath = "/Users/senyang/Desktop/QiNiu/1.2M.zip"
 
-	key := "http3_test1" + fmt.Sprintf("%d", rand.Int())
+	key := "http3_test_" + time.Now().Format("2006/01/02 15:04:05.999999")
 	token := "HwFOxpYCQU6oXoZXFOTh1mq5ZZig6Yyocgk3BTZZ:6MoNfPe6Tj6LaZXwSmRoY5PqcCA=:eyJzY29wZSI6ImtvZG8tcGhvbmUtem9uZTAtc3BhY2UiLCJkZWFkbGluZSI6MTYxNzUwNzUxMiwgInJldHVybkJvZHkiOiJ7XCJjYWxsYmFja1VybFwiOlwiaHR0cDpcL1wvY2FsbGJhY2suZGV2LnFpbml1LmlvXCIsIFwiZm9vXCI6JCh4OmZvbyksIFwiYmFyXCI6JCh4OmJhciksIFwibWltZVR5cGVcIjokKG1pbWVUeXBlKSwgXCJoYXNoXCI6JChldGFnKSwgXCJrZXlcIjokKGtleSksIFwiZm5hbWVcIjokKGZuYW1lKX0ifQ=="
 
 	config := &storage.Config{
@@ -96,7 +98,6 @@ func uploadFileToQiniu(index int, goroutineIndex int) {
 	uploader := storage.NewResumeUploader(config)
 	ctx := context.Background()
 
-	var response storage.PutRet
-	err := uploader.PutFile(ctx, &response, token, key, filePath, nil)
-	fmt.Printf("goroutineIndex:%d, index:%d key:%s error:%v response:%v \n", goroutineIndex, index, key, err, response)
+	err = uploader.PutFile(ctx, &response, token, key, filePath, nil)
+	return
 }
