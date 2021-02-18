@@ -52,7 +52,7 @@ func upload(uploadCount int, goroutineCount int) {
 
 			for {
 				index, ok := <-source
-				if !ok && len(source) == 0 {
+				if !ok {
 					break
 				} else {
 					done := make(chan bool)
