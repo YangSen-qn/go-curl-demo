@@ -18,12 +18,13 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 
 	transport := &curl.Transport{
-		Transport: &http.Transport{},
+		Transport: &http.Transport{
+			IdleConnTimeout: time.Second * 60,
+		},
 		//CAPath:     "/Users/senyang/Desktop/QiNiu/Test/Go/test/examples/http-transport/curl/lib/resource/cacert.pem",
 		ForceHTTP3: true,
 	}
 	client.DefaultClient.Client = &http.Client{Transport: transport}
-
 
 	upload(1000, 2)
 
@@ -57,19 +58,17 @@ func upload(uploadCount int, goroutineCount int) {
 				} else {
 					done := make(chan bool)
 					go func() {
-						for {
-							select {
-							case <-done:
-								break
-							case <-time.After(5 * 60 * time.Second):
-								fmt.Println("exit by timeout")
-								syscall.Exit(-1)
-							}
+						select {
+						case <-done:
+							break
+						case <-time.After(5 * 60 * time.Second):
+							fmt.Println("exit by timeout")
+							syscall.Exit(-1)
 						}
 					}()
 					response, err := uploadFileToQiniu()
 					fmt.Printf("goroutineIndex:%d, index:%d error:%v response:%v \n", goroutineIndex, index, err, response)
-					done<- true
+					done <- true
 				}
 			}
 		}(source, i)
@@ -83,7 +82,7 @@ func uploadFileToQiniu() (response storage.PutRet, err error) {
 	filePath := "/Users/senyang/Desktop/QiNiu/pycharm.dmg"
 	filePath = "/Users/senyang/Desktop/QiNiu/UploadResource_49M.zip"
 	filePath = "/Users/senyang/Desktop/QiNiu/Image/image.png"
-	filePath = "/Users/senyang/Desktop/QiNiu/1.2M.zip"
+	//filePath = "/Users/senyang/Desktop/QiNiu/1.2M.zip"
 
 	key := "http3_test_" + time.Now().Format("2006/01/02 15:04:05.999999")
 	token := "HwFOxpYCQU6oXoZXFOTh1mq5ZZig6Yyocgk3BTZZ:6MoNfPe6Tj6LaZXwSmRoY5PqcCA=:eyJzY29wZSI6ImtvZG8tcGhvbmUtem9uZTAtc3BhY2UiLCJkZWFkbGluZSI6MTYxNzUwNzUxMiwgInJldHVybkJvZHkiOiJ7XCJjYWxsYmFja1VybFwiOlwiaHR0cDpcL1wvY2FsbGJhY2suZGV2LnFpbml1LmlvXCIsIFwiZm9vXCI6JCh4OmZvbyksIFwiYmFyXCI6JCh4OmJhciksIFwibWltZVR5cGVcIjokKG1pbWVUeXBlKSwgXCJoYXNoXCI6JChldGFnKSwgXCJrZXlcIjokKGtleSksIFwiZm5hbWVcIjokKGZuYW1lKX0ifQ=="
