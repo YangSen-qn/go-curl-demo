@@ -19,7 +19,7 @@ func main() {
 
 	transport := &curl.Transport{
 		Transport: &http.Transport{
-			IdleConnTimeout: time.Second * 60,
+			IdleConnTimeout: 4 * time.Second * 60,
 		},
 		//CAPath:     "/Users/senyang/Desktop/QiNiu/Test/Go/test/examples/http-transport/curl/lib/resource/cacert.pem",
 		ForceHTTP3: true,
