@@ -1,3 +1,5 @@
+github.com/YangSen-qn/go-curl/v2 v2.0.12 h1:zVQKfQSAEWjSsQ8ecIl8jmKJ+KIjMRwoe2II4wv9mJs=
+github.com/YangSen-qn/go-curl/v2 v2.0.12/go.mod h1:Iy25daug9li/YFx/7RoEVLNlzMVWew7r4AWy5jplRuI=
 github.com/qiniu/go-sdk/v7 v7.9.0 h1:KUZk8mdH6ejznXJTXfM3u+FS47/M3IKXf3QIX2+2ASs=
 github.com/qiniu/go-sdk/v7 v7.9.0/go.mod h1:Eeqk1/Km3f1MuLUUkg2JCSg/dVkydKbBvEdJJqFgn9g=
 golang.org/x/sync v0.0.0-20201207232520-09787c993a3a h1:DcqTD9SDLc+1P/r1EmRBwnVsrOwW+kk2vWf9n+1sGhs=

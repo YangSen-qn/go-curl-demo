@@ -7,6 +7,4 @@ require (
 	github.com/qiniu/go-sdk/v7 v7.9.0
 )
 
-replace (
-	github.com/YangSen-qn/go-curl/v2 => ../go-curl
-)
+replace github.com/YangSen-qn/go-curl/v2 => ../go-curl
